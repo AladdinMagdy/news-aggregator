@@ -1,6 +1,5 @@
-import React, { useEffect, useCallback } from 'react'
-import debounceFn from 'debounce-fn'
-import pDebounce from 'p-debounce';
+import React, { useEffect, useCallback, useRef } from 'react'
+import debounce from '../utils/debounce'
 
 import { newsAPIsNames } from '../constants'
 import { useAsync } from '../hooks/use-async'
@@ -17,9 +16,10 @@ function SearchDialogProvider({ children }) {
 
   const [allAvailableCategories, setAllAvailableCategories] = React.useState('')
 
+  // the useAsync hook is a custom hook made for managing async requests
   const { isLoading, run } = useAsync()
 
-  const reset = useCallback((value) => {
+  const reset = useCallback(() => {
     setQuery('')
     setDate('')
     setCategory('')
@@ -44,22 +44,38 @@ function SearchDialogProvider({ children }) {
     changeSearchSource
   }), [query, date, category, source, reset, allAvailableCategories, changeSearchQuery, changeSearchDate, changeSearchCategory, changeSearchSource])
 
+  // throttling the search input field to reduce the numbers api calls being done
+  const throttled = useRef(
+    debounce((sourceApiClient) =>
+      run(sourceApiClient.getCategories()).then(setAllAvailableCategories).catch(console.log), 500)
+  )
 
-  // if any of these dependencies change then fetch the categories (that's how most of the mentioned apis work, you can't fetch all the categories at once. You must provide some keyword)
+  const sourceRef = useRef('');
+
+  // if any of these dependencies change then fetch the categories (I wanted to add this extra feature because providers
+  // like the Guardians has dynamic categories with every keyword search)
   useEffect(() => {
     // make an instance of the factory pattern that returns the api to make a call to the source to fetch the categories
+    const sourceApiClient = SourceApiClientFactory(source, {})
+    // this check here is to exit early and not fetch categories from providers that doesn't have an endpoint for fetching categories
+    if (sourceApiClient && !sourceApiClient.hasDynamicCategories) {
+      // if the source hasn't changed no need to refetch twice
+      if (source === sourceRef.current) return;
+      sourceRef.current = source
+      const categories = sourceApiClient.getCategories();
+      return setAllAvailableCategories(categories);
+    }
     if (!query.trim()) {
       return setAllAvailableCategories([])
+
     } else if (query.endsWith(' ')) {
       // don't send request if user only adds a space
-      return
+      return;
     }
-    const sourceApiClient = SourceApiClientFactory(source, {})
     if (sourceApiClient) {
-      const debouncedFn = pDebounce(sourceApiClient.getCategories, 1000);
-      run(debouncedFn()).then(data => setAllAvailableCategories([data])).catch(console.log)
+      throttled.current(sourceApiClient)
     }
-  }, [query, date, source, run])
+  }, [query, source, run])
 
   return (
     <SearchDialogContext.Provider value={value}>

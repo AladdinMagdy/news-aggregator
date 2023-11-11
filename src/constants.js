@@ -1,11 +1,13 @@
 export const newsAPIS = {
-  GUARDIANS: 'https://jsonplaceholder.typicode.com',
-  NEW_YORK_TIMES: 'https://jsonplaceholder.typicode.com/todos/1',
-  BBC: 'https://jsonplaceholder.typicode.com/todos/1'
+  GUARDIANS: 'https://content.guardianapis.com',
+  NEWS_API: 'https://newsapi.org/v2',
+  NEW_YORK_TIMES: 'https://api.nytimes.com/svc/search/v2'
 }
 
 export const newsAPIsNames = {
   GUARDIANS: 'GUARDIANS',
-  NEW_YORK_TIMES: 'NEW_YORK_TIMES',
-  BBC: 'BBC'
+  NEWS_API: 'NEWS_API',
+  NEW_YORK_TIMES: 'NEW_YORK_TIMES'
 }
+
+export const nyTimesPrefixURL = 'https://www.nytimes.com/'

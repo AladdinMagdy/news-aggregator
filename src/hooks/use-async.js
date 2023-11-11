@@ -50,6 +50,7 @@ function useAsync(initialState) {
           `The argument passed to useAsync().run must be a promise. Maybe a function that's passed isn't returning anything?`,
         )
       }
+      reset()
       safeSetState({ status: 'pending' })
       return promise.then(
         data => {
@@ -62,7 +63,7 @@ function useAsync(initialState) {
         },
       )
     },
-    [safeSetState, setData, setError],
+    [reset, safeSetState, setData, setError],
   )
 
   return {
