@@ -5,6 +5,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## Important note before running the app
 
 You must replace the sample API keys inside the file ".env.development" with the actual API keys from your newsletter providers.
+This is not intended to be for any commercial use.
 
 ## Available Scripts
 
