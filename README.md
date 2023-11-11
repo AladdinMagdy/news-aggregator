@@ -12,7 +12,7 @@ In the project directory, you can run:
 
 ### `npm run docker-start`
 
-Installs and runs the app in the development mode using Docker.
+Installs and runs the app in the development mode using Docker.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 ### `npm start`
