@@ -11,7 +11,6 @@ import { useAsync } from '../hooks/use-async'
 import SourceApiClientFactory from '../services'
 export default function SearchScreen() {
   const { data: articles, error, isLoading, isSuccess, run } = useAsync()
-  console.log("🚀 ~ file: search-page.js:14 ~ SearchScreen ~ error:", error)
   const mainView = React.useRef(null)
 
 
