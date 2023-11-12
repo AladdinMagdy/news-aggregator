@@ -1,10 +1,10 @@
-FROM node:20-apline3.17 as development
+FROM node:20-alpine3.17 as development
 WORKDIR /app
 COPY package.json .
-COPY package.lock.json .
+COPY package-lock.json .
 RUN npm install
 COPY . .
-RUN npm build
+RUN npm run build
 
 #Production build
 FROM nginx:1.25.3-alpine
